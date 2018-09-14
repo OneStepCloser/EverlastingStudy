@@ -10,10 +10,19 @@
                 </el-button>
             </el-card>
         </div>
-        <div v-else> {{currMail}} <el-button @click="logout()"><</el-button></div>
-        <el-table>
+        <div v-else style="display: flex; flex-direction: column; justify-content: center; align-items: center">
+          <div style="margin-top: 16px; display: flex; flex-direction: row; justify-content: flex-end; align-items: center; width: 100%">
+            <span>
+              {{currMail}}
+            </span>
+            <el-button style="margin: 0 16px" @click="logout()"><</el-button>
+          </div>
+          <el-date-picker v-model="startDate"
+                          style="margin-top: 16px"
+                          type="date">
 
-        </el-table>
+          </el-date-picker>
+        </div>
     </div>
 </template>
 
@@ -22,7 +31,8 @@
         name: "timetable",
         data(){
             return {
-                mail: null
+                mail: null,
+                startDate: '',
             }
         },
         methods: {
@@ -40,8 +50,15 @@
         computed:{
             currMail(){
                 return this.$store.getters.getCurrentMail
+            },
+            allLessons(){
+              return this.$store.getters.getAllLessons
             }
-        }
+        },
+        created(){
+          this.$store.dispatch('loadLessons', {fromDate: '2018.09.01', toDate: '2018.09.07'})
+        },
+
     }
 </script>
 

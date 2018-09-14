@@ -1,10 +1,14 @@
 <template>
-    <div>Teachers</div>
+  <Loading :loaded="false">
+
+  </Loading>
 </template>
 
 <script>
+    import Loading from "./Universal/Loading";
     export default {
-        name: "teachers"
+        name: "teachers",
+      components: {Loading}
     }
 </script>
 

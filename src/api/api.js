@@ -33,7 +33,7 @@ function recallingGetRequest(url, params, times) {
         if(recalls <= 0)
             reject("Сервер не отвечает");
         else{
-            getRequest((url, params))
+            getRequest(url, params)
                 .then(resolve)
                 .catch(er => {
                     if(er.message === "Network Error" || (er.status && config.dev.recallingStatuses.indexOf(er.status) !== -1))
