@@ -10,7 +10,7 @@ import router from './router';
 import VueCookies from 'vue-cookies'
 import _ from 'lodash'
 import 'reset-css';
-import store from './store/store'
+import store from './store/store';
 
 import YmapPlugin from 'vue-yandex-maps'
 
@@ -18,7 +18,7 @@ Vue.config.productionTip = false;
 Vue.use(ElementUI, {locale});
 Vue.use(VueCookies);
 Vue.use(_);
-Vue.use(YmapPlugin)
+Vue.use(YmapPlugin);
 
 window._ = _;
 
@@ -29,6 +29,7 @@ new Vue({
     components: {App},
     template: '<App/>',
     created(){
-        this.$store.dispatch('loadCurrentMail');
+      this.$store.dispatch('loadCurrentMail');
+      this.$store.dispatch('loadBuildings');
     }
 });
