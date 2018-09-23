@@ -10,7 +10,17 @@
   export default {
     name: "SingleLesson",
     props: {
-      lesson: Object
+      lesson: {
+        type: Object,
+        default: () =>{
+          return {
+            discipline: '',
+            kindOfWork: '',
+            auditorium: '',
+            lecturer: '',
+          }
+        }
+      }
     }
   }
 </script>

@@ -80,7 +80,8 @@
     data() {
       return {
         mail: null,
-        startDate: '',
+        startDate: '2018.09.10',
+        finishDate: '2018.09.16',
       }
     },
     components:{SingleLesson},
@@ -107,7 +108,7 @@
 
     },
     created() {
-      this.$store.dispatch('loadLessons', {fromDate: '2018.09.10', toDate: '2018.09.16'})
+      this.$store.dispatch('loadLessons', {fromDate: this.startDate, toDate: this.finishDate})
     },
 
   }

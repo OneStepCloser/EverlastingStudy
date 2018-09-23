@@ -17,7 +17,6 @@ const actions = {
     return new Promise((resolve,reject)=>{
       Api.Timetable.loadTimetable(fromDate, toDate, rootState.mail.mail)
         .then(res => {
-
           let byStart = _.groupBy(res.data.query.results.json.json, 'beginLesson');
           let timetable = {};
           state.starts.forEach(start => {
