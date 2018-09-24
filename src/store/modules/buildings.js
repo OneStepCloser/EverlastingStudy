@@ -58,6 +58,7 @@ function mapBuildings(buildings, resolve) {
     if(counter === 0)
       resolve();
   });
+
   return temp
 }
 

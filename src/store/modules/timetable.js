@@ -17,13 +17,14 @@ const actions = {
     return new Promise((resolve,reject)=>{
       Api.Timetable.loadTimetable(fromDate, toDate, rootState.mail.mail)
         .then(res => {
+
           let byStart = _.groupBy(res.data.query.results.json.json, 'beginLesson');
           let timetable = {};
           state.starts.forEach(start => {
             timetable[start] = {};
             if (byStart[start]) {
               byStart[start].forEach(e=>{
-                timetable[start][convertNumToDay(e.dayOfWeek)] = {
+                timetable[start][e.date] = {
                   auditorium: e.auditorium,
                   lecturer: e.lecturer,
                   kindOfWork: e.kindOfWork,

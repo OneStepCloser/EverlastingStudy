@@ -18,11 +18,19 @@
             </span>
         <el-button style="margin: 0 16px" @click="logout()"><</el-button>
       </div>
-      <el-date-picker v-model="startDate"
+      <el-date-picker v-model="dates"
+                      type="daterange"
+                      align="center"
+                      :picker-options="{
+                        firstDayOfWeek: 1,
+                      }"
+                      :disabled="pickerDisabled"
+                      @change="picked"
+                      start-placeholder="Начальная дата"
+                      end-placeholder="Конечная дата"
                       style="margin-top: 16px"
-                      type="date">
-
-      </el-date-picker>
+                      value-format="yyyy.MM.dd"
+                      format="yyyy.MM.dd"/>
       <el-table :data="allLessons"
                 style="width: 90%; margin-top: 24px"
                 border>
@@ -32,40 +40,12 @@
           fixed
           prop="start">
         </el-table-column>
-        <el-table-column
-          label="Понедельник">
+
+        <el-table-column v-for="(l, i) in labels"
+                         :label="l"
+                         :key="i">
           <template slot-scope="scope">
-            <single-lesson :lesson="scope.row.MON"></single-lesson>
-          </template>
-        </el-table-column>
-        <el-table-column
-          label="Вторник">
-          <template slot-scope="scope">
-            <single-lesson :lesson="scope.row.TUE"></single-lesson>
-          </template>
-        </el-table-column>
-        <el-table-column
-          label="Среда">
-          <template slot-scope="scope">
-            <single-lesson :lesson="scope.row.WED"></single-lesson>
-          </template>
-        </el-table-column>
-        <el-table-column
-          label="Четверг">
-          <template slot-scope="scope">
-            <single-lesson :lesson="scope.row.THU"></single-lesson>
-          </template>
-        </el-table-column>
-        <el-table-column
-          label="Пятница">
-          <template slot-scope="scope">
-            <single-lesson :lesson="scope.row.FRI"></single-lesson>
-          </template>
-        </el-table-column>
-        <el-table-column
-          label="Суббота">
-          <template slot-scope="scope">
-            <single-lesson :lesson="scope.row.SAT"></single-lesson>
+            <single-lesson :lesson="scope.row[l]"></single-lesson>
           </template>
         </el-table-column>
       </el-table>
@@ -75,16 +55,21 @@
 
 <script>
   import SingleLesson from './SingleLesson'
+  import Vue from 'vue'
+  import moment from 'moment'
+
   export default {
     name: "timetable",
     data() {
       return {
         mail: null,
-        startDate: '2018.09.10',
-        finishDate: '2018.09.16',
+        dates: ['2018.09.10', '2018.09.16'],
+        labels: [],
+        pickerDisabled: false
       }
     },
-    components:{SingleLesson},
+
+    components: {SingleLesson},
     methods: {
       auth() {
         if (!this.mail.match(/.*@edu\.hse\.ru$|.*@hse\.ru$/))
@@ -95,7 +80,46 @@
       logout() {
         this.mail = "";
         this.$store.dispatch('removeCurrentMail');
-      }
+      },
+      getDates(start, stop) {
+        let dateArray = [];
+        let currentDate = moment(start);
+        let stopDate = moment(stop);
+        while (currentDate <= stopDate) {
+          dateArray.push(moment(currentDate).format('YYYY.MM.DD'));
+          currentDate = moment(currentDate).add(1, 'days');
+        }
+        return dateArray;
+      },
+      loadLessons(start, finish) {
+        this.labels = this.getDates(start, finish);
+        return this.$store.dispatch('loadLessons', {fromDate: start, toDate: finish});
+      },
+      dowNumToString(num) {
+        switch (num) {
+          case 1:
+            return 'Понедельник';
+          case 2:
+            return 'Вторник';
+          case 3:
+            return 'Среда';
+          case 4:
+            return 'Четверг';
+          case 5:
+            return 'Пятница';
+          case 6:
+            return 'Суббота';
+          case 0:
+            return 'Воскресенье';
+        }
+      },
+      picked() {
+        this.pickerDisabled = true;
+        this.loadLessons(this.dates[0], this.dates[1])
+          .then(() => {
+            this.pickerDisabled = false
+          })
+      },
     },
     computed: {
       currMail() {
@@ -108,8 +132,9 @@
 
     },
     created() {
-      this.$store.dispatch('loadLessons', {fromDate: this.startDate, toDate: this.finishDate})
+      this.loadLessons(this.dates[0], this.dates[1]);
     },
+
 
   }
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div class="singleLesson">
-    <div class="line" style="font-size: 1.1em; font-weight: 600">{{lesson.discipline}}, {{lesson.auditorium}}</div>
+    <div class="line" style="font-size: 1.1em; font-weight: 600">{{lesson.discipline}}{{lesson.auditorium !== '' ? ', ' :''}}{{lesson.auditorium}}</div>
     <div class="line extra">{{lesson.kindOfWork}}</div>
     <div class="line extra">{{lesson.lecturer}}</div>
   </div>
